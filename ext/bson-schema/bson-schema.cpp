@@ -23,11 +23,10 @@ static VALUE method_validate_throw(VALUE self, VALUE schema, VALUE data){
   try{
     CValidator::validate_throw(schema_bson, data_bson);
   } catch(const InvalidSchema& e){
-    printf("invalid schema raised: %s\n", e.what());
-    //TODO: raise ruby exception
+    rb_raise(rb_eRuntimeError, "InvalidSchema: %s", e.what());
     return Qfalse;
   } catch(const ValidationError& e){
-    printf("validation error raised: %s\n", e.what());
+    rb_raise(rb_eRuntimeError, "ValidationError: %s", e.what());
     return Qfalse;
   }
 
