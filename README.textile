@@ -1,0 +1,74 @@
+h1. Ruby BSON Schema Validator
+
+This gem is inspired by json-schema, but has native extension and works over BSON (binary json)
+
+h2. Dependencies
+
+bson (bson_ext recommended) for bson serialization, may not be used if you feed gem with already serialized strings
+
+mongoclient, pcre and boost for native extension compilation.
+
+h2. Installation
+
+From the git repo:
+
+<pre>
+$ gem build bson-schema.gemspec
+$ gem install bson-schema
+</pre>
+
+
+h2. Usage
+
+(docs coming)
+<pre>
+    Bson::Schema.validate!(schema_more, data_more)
+</pre>
+
+h2. Performance
+
+  Ruby 1.9.2:
+<pre>
+  $ rake benchmark
+               user     system      total        real
+  bson simple:  0.010000   0.000000   0.010000 (  0.009492)
+  json simple:  0.060000   0.000000   0.060000 (  0.056072)
+  bson large:  1.350000   0.000000   1.350000 (  1.356362)
+  bson binary:  1.170000   0.000000   1.170000 (  1.168567)
+  json large:  3.220000   0.000000   3.220000 (  3.210927)
+</pre>
+
+  Ruby 1.8.7:
+<pre>
+                 user     system      total        real
+  bson simple:  0.010000   0.000000   0.010000 (  0.010592)
+  json simple:  0.050000   0.000000   0.050000 (  0.057044)
+  bson large:  1.200000   0.000000   1.200000 (  1.196412)
+  bson binary:  1.090000   0.000000   1.090000 (  1.096973)
+  json large:  5.460000   0.080000   5.540000 (  5.539910)
+</pre>
+
+h2. License
+
+(The MIT License)
+
+Copyright (c) 2011 Vasily Fedoseyev
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

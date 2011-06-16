@@ -5,3 +5,4 @@ gemspec
 
 gem 'bson'
 gem 'bson_ext'
+gem 'json-schema'
