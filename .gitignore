@@ -1,0 +1,7 @@
+*.gem
+.bundle
+Gemfile.lock
+pkg/*
+*.bundle
+*.log
+ext/bson-schema/Makefile
