@@ -29,8 +29,8 @@ dir_config('mongoclient', HEADER_DIRS, LIB_DIRS)
 dir_config('boost', HEADER_DIRS, LIB_DIRS)
 dir_config('pcre', HEADER_DIRS, LIB_DIRS)
 
-unless find_header('pcre.h')
-  abort 'This extension requires PCRE'
+unless have_header('pcre.h')
+  puts "Warning: NO PCRE"
 end
 
 # unless find_header('mongo/bson/bson.h')
@@ -46,4 +46,5 @@ have_library('boost_system')
 have_library('pcre')
 have_library('mongoclient')
 
+create_header('extconf.h')
 create_makefile("bson_schema")

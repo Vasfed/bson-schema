@@ -3,9 +3,13 @@
 #include <string>
 #include <map>
 
-#include <mongo/bson/bson.h>
-#include <pcre.h>
+#include "extconf.h"
 
+#include <mongo/bson/bson.h>
+
+#ifdef HAVE_PCRE_H
+  #include <pcre.h>
+#endif
 
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
@@ -324,6 +328,7 @@ class CValidatorImpl: public CValidator{
     bool match_pattern(const char* pattern, string str){
       const char *error;
       int erroffset;
+      #ifdef HAVE_PCRE_H
        pcre *re = pcre_compile(
         pattern,
         0,                /* default options */
@@ -341,6 +346,11 @@ class CValidatorImpl: public CValidator{
             0);           /* number of elements in the output vector */
        pcre_free(re);
        return rc >= 0;
+      #else
+      //TODO: fail here if no PCRE?
+       fprintf(stderr, "Warning: bson-schema compiled without pcre, any RE matching fails.\n");
+       return false;
+      #endif
     }
 
     bool match_pattern(BSONElement val, string str){

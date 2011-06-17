@@ -5,3 +5,4 @@ pkg/*
 *.bundle
 *.log
 ext/bson-schema/Makefile
+ext/bson-schema/extconf.h
