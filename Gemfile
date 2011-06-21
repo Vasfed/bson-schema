@@ -5,4 +5,4 @@ gemspec
 
 gem 'bson'
 gem 'bson_ext'
-gem 'json-schema'
+gem 'json-schema', :require => false # needed only for comparison in benchmarks

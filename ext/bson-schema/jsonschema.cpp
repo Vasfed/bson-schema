@@ -388,8 +388,8 @@ class CValidatorImpl: public CValidator{
           for(BSONObj::iterator i = type_schema.Obj().begin(); i.more();){
             BSONElement e = i.next();
             try{
-              if(e.type() == mongo::String && is_type(data, e.str()) ||
-                 e.type() == mongo::Object && CHAIN_SCHEMA(e.Obj(), data, path))
+              if((e.type() == mongo::String && is_type(data, e.str())) ||
+                 (e.type() == mongo::Object && CHAIN_SCHEMA(e.Obj(), data, path)))
                  return true;
             } catch(ValidationError){
               continue;

@@ -7,8 +7,8 @@
 #include <mongo/bson/bson.h>
 
 //TODO: выпилить bson из монгодрайвера чтобы убрать зависимость
-typedef mongo::BSONObj BSONObj;
-typedef mongo::BSONElement BSONElement;
+// typedef mongo::BSONObj BSONObj;
+// typedef mongo::BSONElement BSONElement;
 
 
 //exceptions:
@@ -19,12 +19,12 @@ class CValidator {
 public:
 
   //these just return if data validates (or throw InvalidSchema)
-  static bool validate(BSONObj schema, BSONElement data);
-  static bool validate(BSONObj schema, BSONObj data);
+  static bool validate(mongo::BSONObj schema, mongo::BSONElement data);
+  static bool validate(mongo::BSONObj schema, mongo::BSONObj data);
 
   //these return true or throw ValidationError
-  static bool validate_throw(BSONObj schema, BSONElement data);
-  static bool validate_throw(BSONObj schema, BSONObj data);
+  static bool validate_throw(mongo::BSONObj schema, mongo::BSONElement data);
+  static bool validate_throw(mongo::BSONObj schema, mongo::BSONObj data);
 
 
 

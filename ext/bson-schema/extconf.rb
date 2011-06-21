@@ -25,8 +25,8 @@ LIB_DIRS = [
 ]
 
 dir_config("bson-schema")
-dir_config('mongoclient', HEADER_DIRS, LIB_DIRS)
-dir_config('boost', HEADER_DIRS, LIB_DIRS)
+#dir_config('mongoclient', HEADER_DIRS, LIB_DIRS)
+#dir_config('boost', HEADER_DIRS, LIB_DIRS)
 dir_config('pcre', HEADER_DIRS, LIB_DIRS)
 
 unless have_header('pcre.h')
@@ -42,9 +42,9 @@ end
 # end
 
 
-have_library('boost_system')
+#have_library('boost_system')
 have_library('pcre')
-have_library('mongoclient')
+#have_library('mongoclient')
 
 create_header('extconf.h')
 create_makefile("bson_schema")
