@@ -11,6 +11,8 @@
   #include <pcre.h>
 #endif
 
+#include <algorithm>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -49,26 +51,28 @@ string str_type(mongo::BSONElement data){
 bool is_type(mongo::BSONElement data, string type){//helper
  using namespace mongo;
 
-  if(boost::iequals(type, "any"))
+ std::transform(type.begin(), type.end(), type.begin(), ::tolower);
+
+  if(type == "any")
     return true;
 
   switch(data.type()){
     case jstNULL:
-      return boost::iequals(type, "null");
+      return type == "null";
     case NumberDouble:
-      return boost::iequals(type, "number");
+      return type == "number";
     case NumberInt:
     case NumberLong:
-      return boost::iequals(type, "integer") || boost::iequals(type, "number");
+      return type == "integer" || type == "number";
     case mongo::String:
     case Symbol:
-      return boost::iequals(type, "string");
+      return type == "string";
     case Object:
-      return boost::iequals(type, "object");
+      return type == "object";
     case mongo::Array:
-      return boost::iequals(type, "array");
+      return type == "array";
     case mongo::Bool:
-      return boost::iequals(type, "boolean");
+      return type == "boolean";
 
 
     // TODO: other types? (not covered by json-schema spec)
