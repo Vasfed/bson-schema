@@ -12,10 +12,9 @@
 #endif
 
 #include <algorithm>
+#include <sstream>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
-
 
 #include "jsonschema.h"
 
@@ -133,6 +132,13 @@ bool is_equal_bson(mongo::BSONElement a, mongo::BSONElement b){
   return false;
 }
 
+template <class T>
+std::string to_string(T t){
+  std::ostringstream os;
+  os << t;
+  return os.str();
+}
+
 
 template<bool ThrowOnFail=false>
 class CValidatorImpl: public CValidator{
@@ -176,7 +182,8 @@ class CValidatorImpl: public CValidator{
           if(e.type() == mongo::Array){
             for(BSONObj::iterator j = e.Obj().begin(); j.more();){
               BSONElement e = j.next();
-              handle_subschemas(e.Obj(), id, level+1, path + "items[" + boost::lexical_cast<string>(e.fieldName()) + "]/");
+              handle_subschemas(e.Obj(), id, level+1, path + "items[" + to_string(e.fieldName()) + "]/"
+              );
             }
           } else if(e.type() == mongo::Object){
             handle_subschemas(e.Obj(), id, level+1, path + "items/");
@@ -190,7 +197,7 @@ class CValidatorImpl: public CValidator{
             for(BSONObj::iterator j = e.Obj().begin(); j.more();){
               BSONElement e = j.next();
               if(e.type() == mongo::Object)
-                handle_subschemas(e.Obj(), id, level+1, path + e.fieldName() + "[" + boost::lexical_cast<string>(e.fieldName()) + "]/"); //+2?
+                handle_subschemas(e.Obj(), id, level+1, path + e.fieldName() + "[" + to_string(e.fieldName()) + "]/"); //+2?
             }
           } else if(e.type() == mongo::Object){
             handle_subschemas(e.Obj(), id, level+1, path + e.fieldName() + "/");
@@ -254,7 +261,7 @@ class CValidatorImpl: public CValidator{
         return id.String();
       } else {
         //TODO: a better generation, GUID-like maybe
-        return std::string("_unnamed_schema") + boost::lexical_cast<std::string>(m_schemas.size());
+        return std::string("_unnamed_schema") + to_string(m_schemas.size());
       }
     }
 
@@ -465,7 +472,7 @@ class CValidatorImpl: public CValidator{
         if(items_schema.type() == mongo::Object){
           for(BSONObj::iterator i = data.Obj().begin(); i.more();){
             BSONElement e = i.next();
-            if(!CHAIN_SCHEMA(items_schema.Obj(), e, path + "[" + boost::lexical_cast<std::string>(num) + "]"))
+            if(!CHAIN_SCHEMA(items_schema.Obj(), e, path + "[" + to_string(num) + "]"))
               FAIL("");
             num++;
           }
@@ -476,7 +483,7 @@ class CValidatorImpl: public CValidator{
             BSONElement e = i.next(), is = s.next();
             if(is.type() != mongo::Object)
               throw InvalidSchema("items in items array should be schemas");
-            if(!CHAIN_SCHEMA(is.Obj(), e, path + "[" + boost::lexical_cast<std::string>(num) + "]"))
+            if(!CHAIN_SCHEMA(is.Obj(), e, path + "[" + to_string(num) + "]"))
               FAIL("");
             num++;
           }
@@ -491,7 +498,7 @@ class CValidatorImpl: public CValidator{
               case mongo::Object:
                 while(i.more()){
                   BSONElement e = i.next();
-                  if(!CHAIN_SCHEMA(additional.Obj(), e, path + "[" + boost::lexical_cast<std::string>(num) + "]"))
+                  if(!CHAIN_SCHEMA(additional.Obj(), e, path + "[" + to_string(num) + "]"))
                     FAIL("");
                   num++;
                 }
@@ -547,7 +554,7 @@ class CValidatorImpl: public CValidator{
 
         //FIXME: this counts bytes instead of unicode chars!
         if(data.String().length() < (size_t)val.Int())
-          FAIL(string(": length is under ") + boost::lexical_cast<string>(val.Int()));
+          FAIL(string(": length is under ") + to_string(val.Int()));
       }
       return true;
     }
@@ -558,7 +565,7 @@ class CValidatorImpl: public CValidator{
         if(val.type() != mongo::NumberInt)
           throw InvalidSchema("maxLength must be a integer");
         if(data.String().length() > (size_t)val.Int())
-          FAIL(string(": length is over ") + boost::lexical_cast<string>(val.Int()));
+          FAIL(string(": length is over ") + to_string(val.Int()));
       }
       return true;
     }
@@ -583,7 +590,7 @@ class CValidatorImpl: public CValidator{
         default: // for other types- assume not divisible (no mention for that in std)
           break;
       }
-      FAIL(string(": value is not integer or not divisible by ") + boost::lexical_cast<string>(val.Int()));
+      FAIL(string(": value is not integer or not divisible by ") + to_string(val.Int()));
     }
 
     //bool validate_maximum(BSONObj schema, BSONElement val, BSONElement data, string path){
@@ -592,7 +599,7 @@ class CValidatorImpl: public CValidator{
         if(!val.isNumber())
           throw InvalidSchema("maximum must be a number");
         if(schema["exclusiveMaximum"].trueValue() ? data.Number() >= val.Number() : data.Number() > val.Number())
-          FAIL(": value is over " + boost::lexical_cast<string>(val.Number()));
+          FAIL(": value is over " + to_string(val.Number()));
       }
       return true;
     }
@@ -603,7 +610,7 @@ class CValidatorImpl: public CValidator{
         if(!val.isNumber())
           throw InvalidSchema("minimum must be a number");
         if(schema["exclusiveMinimum"].trueValue() ? data.Number() <= val.Number() : data.Number() < val.Number())
-          FAIL(": value is under " + boost::lexical_cast<string>(val.Number()));
+          FAIL(": value is under " + to_string(val.Number()));
       }
       return true;
     }
@@ -643,7 +650,7 @@ class CValidatorImpl: public CValidator{
       if(data.type() == mongo::Array){
         int nfields = data.Obj().nFields();
         if(nfields < val.Int())
-          FAIL(": array has " + boost::lexical_cast<string>(nfields) + " while required at least " + boost::lexical_cast<string>(val.Int()));
+          FAIL(": array has " + to_string(nfields) + " while required at least " + to_string(val.Int()));
       }
       return true;
     }
@@ -656,7 +663,7 @@ class CValidatorImpl: public CValidator{
       if(data.type() == mongo::Array){
         int nfields = data.Obj().nFields();
         if(nfields > val.Int())
-          FAIL(": array has " + boost::lexical_cast<string>(nfields) + " while required at most " + boost::lexical_cast<string>(val.Int()));
+          FAIL(": array has " + to_string(nfields) + " while required at most " + to_string(val.Int()));
       }
       return true;
     }
