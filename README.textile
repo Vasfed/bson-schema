@@ -1,12 +1,13 @@
 h1. Ruby BSON Schema Validator
 
-This gem is inspired by json-schema, but has native extension and works over BSON (binary json)
+This gem is inspired by json-schema, but has native extension and works over BSON (binary json).
+Almost draft-3 compiliant (no schema fetching, no hyperschemas), works faster than original json-schema and even more faster it you use BSON as your primary format.
 
 h2. Dependencies
 
 bson (bson_ext recommended) for bson serialization, may not be used if you feed gem with already serialized strings
 
-mongoclient, pcre and boost for native extension compilation.
+pcre(optional, needed for pattern matchers) and boost(only headers needed) for native extension compilation.
 
 h2. Installation
 
