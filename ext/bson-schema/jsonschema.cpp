@@ -1,11 +1,7 @@
-//#include <mongo/client/dbclient.h>
-
 #include <string>
 #include <map>
 
 #include "extconf.h"
-
-#include <mongo/bson/bson.h>
 
 #ifdef HAVE_PCRE_H
   #include <pcre.h>

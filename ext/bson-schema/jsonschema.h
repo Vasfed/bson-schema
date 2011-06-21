@@ -4,7 +4,7 @@
 
 #include <stdexcept>
 #include <string>
-#include <mongo/bson/bson.h>
+#include "bson/bson.h"
 
 //TODO: выпилить bson из монгодрайвера чтобы убрать зависимость
 // typedef mongo::BSONObj BSONObj;
