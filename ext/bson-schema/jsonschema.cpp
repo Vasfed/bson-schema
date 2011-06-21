@@ -14,8 +14,6 @@
 #include <algorithm>
 #include <sstream>
 
-#include <boost/algorithm/string.hpp>
-
 #include "jsonschema.h"
 
 using namespace std;
@@ -277,13 +275,17 @@ class CValidatorImpl: public CValidator{
       if(fragment == "/" || fragment == "")
         return schema_root;
 
-      // сплиттим и сносим лишнее из фрагментов
+      //split fragments:
       vector<string> fragments;
-      boost::split(fragments, fragment, boost::is_any_of("/\\"), boost::token_compress_on);
-      std::vector<string>::iterator new_end = std::remove_if(fragments.begin(), fragments.end(), std::bind2nd(std::equal_to<string>(), string("")));
-      fragments.erase(new_end, fragments.end());
-      std::vector<string>::iterator It = fragments.begin();
+      std::string token;
+      std::istringstream ss(fragment);
+      while(std::getline(ss, token, '/')) {
+          if(token != "")
+            fragments.push_back(token);
+      }
 
+      // resolve in schema:
+      std::vector<string>::iterator It = fragments.begin();
       BSONElement target = schema_root[*It];
       string target_path = "/" + *It;
       It++;

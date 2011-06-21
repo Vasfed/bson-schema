@@ -37,11 +37,6 @@ end
 #   abort 'This extension requires mongocpp driver'
 # end
 
-# unless find_header('boost/algorithm/string.hpp') && have_header('boost/lexical_cast.hpp')
-#   abort 'This extension requires BOOST'
-# end
-
-
 #have_library('boost_system')
 have_library('pcre')
 #have_library('mongoclient')
