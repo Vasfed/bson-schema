@@ -18,9 +18,10 @@
 #include "jsonschema.h"
 
 using namespace std;
+using namespace mongo;
 
 
-string str_type(BSONElement data){
+string str_type(mongo::BSONElement data){
   using namespace mongo;
   switch(data.type()){
      case jstNULL: return "null";
@@ -45,7 +46,7 @@ string str_type(BSONElement data){
    }
 }
 
-bool is_type(BSONElement data, string type){//helper
+bool is_type(mongo::BSONElement data, string type){//helper
  using namespace mongo;
 
   if(boost::iequals(type, "any"))
@@ -91,7 +92,7 @@ bool is_type(BSONElement data, string type){//helper
   }
 }
 
-bool is_equal_bson(BSONElement a, BSONElement b){
+bool is_equal_bson(mongo::BSONElement a, mongo::BSONElement b){
   if(a.isNumber() && b.isNumber() && a.Number() == b.Number())
     return true;
   if(a.type() != b.type())
